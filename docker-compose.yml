@@ -1,0 +1,24 @@
+version: "3"
+services:
+  adin-api:
+    image: bnaito/adin-api:test
+    container_name: adin-api
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - discovery.type=single-node
+    build:
+        context: ./adin-be/
+    ports:
+      - 8000:8000
+  adin-fe:
+    image: bnaito/adin-fe:test
+    container_name: adin-fe
+    command: npm start
+    environment:
+      - discovery.type=single-node
+    build:
+        context: ./adin-fe/
+    depends_on:
+      - adin-api
+    ports:
+      - 3000:3000
