@@ -1,18 +1,18 @@
 version: "3"
-services:
+services:      
     adin-api:
-        image: bnaito/adin-api:1.1.0
+        image: bnaito/adin-api:3.0.0
         container_name: adin-api
         command: bash -c "python manage.py runserver 0.0.0.0:8000"
         environment:
           - discovery.type=single-node
         build:
-            context: ./adin-be/
+            context: ./adin-api/
         ports:
           - "8000:8000"
-      
+    
     adin-fe:
-        image: bnaito/adin-fe:test
+        image: bnaito/adin-fe:1.3.0
         container_name: adin-fe
         command: npm start
         environment:
@@ -21,17 +21,36 @@ services:
             context: ./adin-fe/
         depends_on:
           - adin-api
+          - adin-nh
         ports:
           - "3000:3000"
-      
+        expose:
+          - "3000"
+
+    adin-nh:
+        image: bnaito/adin-nh:1.3.0
+        container_name: adin-nh
+        command: bash -c "python bridge.py runserver"
+        environment:
+          - discovery.type=single-node
+        build:
+            context: ./adin-nh/
+        depends_on:
+          - orion 
+        ports:
+          - "54100:54100"
+          - "8080:8080"
+        expose:
+            - "54100"
+            - "8080"
+  
     mongo:
         image: mongo:3.2
         command: --nojournal
         container_name: mongo
         
     orion:
-        image: fiware/orion-ld
-        hostname: orion
+        image: fiware/orion-ld:latest
         links:
             - mongo
         ports:
