@@ -4,12 +4,6 @@ services:
         image: docker.ramp.eu/shop4cf/adin-api:3.0.0
         container_name: adin-api
         command: bash -c "python manage.py runserver 0.0.0.0:8000"
-        environment:
-            - POSTGRES_NAME=local_adin_db_2
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=Aitor123
-            - POSTGRES_HOST=adin-db
-            - POSTGES_PORT=5432
         ports:
           - "8000:8000"
           
