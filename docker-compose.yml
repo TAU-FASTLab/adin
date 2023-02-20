@@ -1,14 +1,34 @@
 version: "3"
 services:      
     adin-api:
-        image: docker.ramp.eu/shop4cf/adin-api:3.0.0
+        image: docker.ramp.eu/shop4cf/adin-api:5.0.0
         container_name: adin-api
         command: bash -c "python manage.py runserver 0.0.0.0:8000"
+        environment:
+            - POSTGRES_USER= YOUR_USER
+            - POSTGRES_PASSWORD=YOUR_PASSWORD
+            - POSTGRES_DB=YOUR_DB
+            - DB_HOST=adin-db
+            - DB_PORT= 5432
         ports:
-          - "8000:8000"
-          
+            - "8000:8000"
+        depends_on:
+            - adin-db
+    
+    adin-db:
+        image: postgres:14
+        environment:
+            - POSTGRES_USER=YOUR_USER
+            - POSTGRES_PASSWORD=YOUR_PASSWORD
+            - POSTGRES_DB=local_adin_db_2
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+            - ./db_data/backups/adin_db_backup_v6.sql:/docker-entrypoint-initdb.d/init.sql:ro
+        ports:
+            - "5432:5432"
+    
     adin-fe:
-        image: docker.ramp.eu/shop4cf/adin-fe:1.3.0
+        image: docker.ramp.eu/shop4cf/adin-fe:1.4.1
         container_name: adin-fe
         command: npm start
         depends_on:
@@ -49,4 +69,6 @@ services:
             - "1026"
         depends_on:
             - mongo
-            
+    
+volumes:
+    pgdata:
