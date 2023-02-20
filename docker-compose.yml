@@ -23,7 +23,7 @@ services:
             - POSTGRES_DB=local_adin_db_2
         volumes:
             - pgdata:/var/lib/postgresql/data
-            - ./db_data/backups/adin_db_backup_v6.sql:/docker-entrypoint-initdb.d/init.sql:ro
+            - ./YOUR_DIRECTORY_TO_DATABASE_BACKUP:/docker-entrypoint-initdb.d/init.sql:ro
         ports:
             - "5432:5432"
     
