@@ -53,7 +53,7 @@ services:
             - "8080"
   
     mongo:
-        image: mongo:3.2
+        image: mongo:4.2
         command: --nojournal
         container_name: mongo
         
